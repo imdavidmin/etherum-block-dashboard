@@ -1,0 +1,58 @@
+:root {
+    --colourBackground: linear-gradient(89.73deg, #584E9A 0.23%, #3A307C 99.77%);
+    --sidebarColour: #6C62AE;
+    --shadow1: 5px 0px 75px 0px #0000001A;
+    --headerBackground: #0000001A;
+    --buttonSelected: #584E9A;
+    --fontSizeBase: 14px;
+    font-family: 'AkkuratStd', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: var(--fontSizeBase);
+}
+
+body {
+    background: var(--colourBackground);
+    display: grid;
+    height: 100vh;
+    grid-template-columns: minmax(100px, 10vw) 1fr;
+    margin: 0
+}
+
+div.sidebar {
+    background: var(--sidebarColour);
+    box-shadow: var(--shadow1);
+    display: grid;
+    grid-template-rows: max-content 1fr max-content;
+    height: 100%;
+
+    button.home-button,
+    button.icon-button {
+        background: transparent;
+        color: #fff;
+        max-width: 10vw;
+        min-width: 100px;
+        max-height: 10vw;
+        min-height: 100px;
+        border: 0;
+
+        &.is-selected {
+            background: var(--buttonSelected)
+        }
+    }
+
+    button.home-button {
+        font-size: 3rem;
+    }
+
+    button.icon-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+
+        svg {
+            width: 1.75rem;
+            height: 1.75rem
+        }
+    }
+}
