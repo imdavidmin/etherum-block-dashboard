@@ -10,6 +10,7 @@
     "@types/node": "^20.11.6",
     "@types/react": "^18.2.48",
     "prettier": "2.8.8",
+    "sass": "^1.70.0",
     "typescript": "^5.3.3"
   },
   "scripts": {
