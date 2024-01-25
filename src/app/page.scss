@@ -5,29 +5,71 @@
     --headerBackground: #0000001A;
     --buttonSelected: #584E9A;
     --fontSizeBase: 14px;
+    --fontSizeMedium: 1.143rem;
+    --fontSizeLarge: 1.5rem;
+    --fontSizeExtraLarge: 3rem;
+    --baseWhite: #fff;
+    --baseBlack: #000;
+    --transparency50: transparent 50%;
     font-family: 'AkkuratStd', Calibri, 'Trebuchet MS', sans-serif;
     font-size: var(--fontSizeBase);
 }
 
+body,
+.grid {
+    display: grid
+}
+
 body {
     background: var(--colourBackground);
-    display: grid;
     height: 100vh;
-    grid-template-columns: minmax(100px, 10vw) 1fr;
+    grid-template-columns: max-content 1fr;
     margin: 0
+}
+
+div.key-stats-container {
+    background: var(--headerBackground);
+
+    &>div {
+        width: max-content;
+        padding: 2rem;
+        grid-auto-flow: column;
+        grid-template-rows: repeat(2, max-content);
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem 3rem;
+
+        span.title-label {
+            color: color-mix(in hsl, var(--baseWhite) 50%, var(--transparency50));
+            text-transform: uppercase;
+        }
+
+        span:not(.title-label) {
+            color: var(--baseWhite)
+        }
+
+        span.stat-unit {
+            font-size: var(--fontSizeLarge);
+        }
+
+        span.stat-value {
+            font-size: var(--fontSizeExtraLarge);
+        }
+    }
 }
 
 div.sidebar {
     background: var(--sidebarColour);
     box-shadow: var(--shadow1);
-    display: grid;
+
+    padding: 0 0.5rem;
+    justify-content: center;
     grid-template-rows: max-content 1fr max-content;
     height: 100%;
 
     button.home-button,
     button.icon-button {
         background: transparent;
-        color: #fff;
+        color: var(--baseWhite);
         max-width: 10vw;
         min-width: 100px;
         max-height: 10vw;
@@ -49,6 +91,10 @@ div.sidebar {
         align-items: center;
         justify-content: center;
         gap: 1rem;
+
+        span {
+            text-transform: uppercase;
+        }
 
         svg {
             width: 1.75rem;

@@ -1,37 +1,26 @@
 'use client'
+import { propagateServerField } from 'next/dist/server/lib/render-server'
 import { ICONS } from './components/icons'
 import './page.scss'
 
-import React, { ReactElement } from 'react'
+import React, { ReactElement, createContext, useState } from 'react'
+
+const DataProvider = createContext({})
 
 export default function Page() {
     return (
-        <>
-            <Sidebar /> <Dashboard />
-        </>
+        <DataProvider.Provider value={null}>
+            <Sidebar />
+            <Dashboard />
+        </DataProvider.Provider>
     )
 }
 function Sidebar() {
     const USER_BUTTONS: Array<string> = ['dashboard', 'projects', 'explorer']
     const APP_BUTTONS: Array<string> = ['settings', 'logout']
     return (
-        <div className="sidebar">
-            <button className="home-button">
-                <svg
-                    width="48"
-                    height="41"
-                    viewBox="0 0 48 41"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M1.39872 0V6.1968L16.201 4.67136H21.6643V14.7014L12.4646 17.5152L0 20.521L1.85088 26.5795L13.7952 21.9888L21.6643 19.584V36.048H16.201L1.39872 34.5216V40.7184H46.6013V34.5216L31.799 36.048H26.3357V19.584L34.1654 21.9763L46.1501 26.5795L48 20.521L35.569 17.5238L26.3357 14.7014V4.67136H31.799L46.6013 6.1968V0H1.39872Z"
-                        fill="white"
-                    />
-                </svg>
-            </button>
+        <div className="sidebar grid">
+            <button className="home-button">{ICONS.infura}</button>
             <div>{getButtons(USER_BUTTONS)}</div>
             <div>{getButtons(APP_BUTTONS)}</div>
         </div>
@@ -49,15 +38,73 @@ function Sidebar() {
 }
 
 function Dashboard() {
+    return (
+        <div>
+            <KeyStats />
+            <BlockVisualisation />
+        </div>
+    )
+}
+
+function KeyStats() {
+    const [data, setData] = useState({
+        currentBlock: 8243132,
+        avgGasPrice: 87,
+        avgBlockSize: 8.2,
+        avgBlockFullness: 0.88,
+    })
+
+    const STAT_CONFIG = {
+        currentBlock: {
+            label: 'Current Block',
+            formatter: (v: number) => v.toLocaleString(),
+        },
+        avgGasPrice: {
+            label: 'Average Gas Price',
+            formatter: (v: number) => v.toLocaleString(),
+            unit: 'gwei',
+        },
+        avgBlockSize: {
+            label: 'Average Block Size',
+            formatter: (v: number) => v.toLocaleString(),
+            unit: 'mgas',
+        },
+        avgBlockFullness: {
+            label: 'Average Block Fullness',
+            formatter: (v: number) =>
+                v.toLocaleString(undefined, { style: 'percent' }),
+        },
+    }
+
+    const stats = Object.entries(data).map(([key, value]) => {
+        const formatter = STAT_CONFIG[key]?.formatter ?? ((v) => v)
+        return (
+            <>
+                <span className="title-label">{STAT_CONFIG[key]?.label}</span>
+                <div>
+                    <span className="stat-value">{formatter(value)}</span>
+                    <span className="stat-unit">{STAT_CONFIG[key]?.unit}</span>
+                </div>
+            </>
+        )
+    })
+    return (
+        <div className="key-stats-container">
+            <div className="grid">{stats}</div>
+        </div>
+    )
+}
+
+function BlockVisualisation() {
     return <div></div>
 }
 
 type IconButtonProps = { icon: ReactElement; label: string }
-function IconButton(props: IconButtonProps) {
+function IconButton(props: Readonly<IconButtonProps>) {
     return (
         <button className="icon-button">
             {props.icon}
-            <span>{props.label.toUpperCase()}</span>
+            <span>{props.label}</span>
         </button>
     )
 }

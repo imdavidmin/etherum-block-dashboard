@@ -8,11 +8,14 @@ export default function RootLayout(
 ) {
     return (
         <html lang="en">
-            <link
-                href="https://db.onlinewebfonts.com/c/04d4dc4689c5228f0b3a5d6ca4cb546a?family=AkkuratStd"
-                rel="stylesheet"
-                type="text/css"
-            />
+            <head>
+                <link
+                    href="https://db.onlinewebfonts.com/c/04d4dc4689c5228f0b3a5d6ca4cb546a?family=AkkuratStd"
+                    rel="stylesheet"
+                    type="text/css"
+                />
+            </head>
+
             <body>{props.children}</body>
         </html>
     )
