@@ -28,6 +28,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/node", "npm:20.11.6"],\
           ["@types/react", "npm:18.2.48"],\
+          ["dayjs", "npm:1.11.10"],\
           ["next", "virtual:b491cab4ff8894026dce8f15cf6b1c0afe4ea0205c75242a22468b5c2a4b604d2e5327238981d957b973e3e815c0aece662110976b5b01c6b49f4c4b056fc267#npm:14.1.0"],\
           ["prettier", "npm:2.8.8"],\
           ["react", "npm:18.2.0"],\
@@ -471,6 +472,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["dayjs", [\
+      ["npm:1.11.10", {\
+        "packageLocation": "../../.yarn/berry/cache/dayjs-npm-1.11.10-2b4382efc1-10c0.zip/node_modules/dayjs/",\
+        "packageDependencies": [\
+          ["dayjs", "npm:1.11.10"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["debug", [\
       ["npm:4.3.4", {\
         "packageLocation": "../../.yarn/berry/cache/debug-npm-4.3.4-4513954577-10c0.zip/node_modules/debug/",\
@@ -713,6 +723,7 @@ const RAW_RUNTIME_STATE =
           ["infura", "workspace:."],\
           ["@types/node", "npm:20.11.6"],\
           ["@types/react", "npm:18.2.48"],\
+          ["dayjs", "npm:1.11.10"],\
           ["next", "virtual:b491cab4ff8894026dce8f15cf6b1c0afe4ea0205c75242a22468b5c2a4b604d2e5327238981d957b973e3e815c0aece662110976b5b01c6b49f4c4b056fc267#npm:14.1.0"],\
           ["prettier", "npm:2.8.8"],\
           ["react", "npm:18.2.0"],\

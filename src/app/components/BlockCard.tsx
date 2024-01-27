@@ -1,6 +1,10 @@
-import { useContext, useEffect, useState } from 'react'
-import { DataProvider } from '../context'
+import { useContext, useEffect, useRef, useState } from 'react'
+import { CardGridContext, DataProviderContext } from '../context'
 import { InfuraApiMethod, getRequestPayload } from '../constants'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(relativeTime)
 
 export type BlockCardProps = {
     blockNumber: string
@@ -9,8 +13,12 @@ export type BlockCardProps = {
 export function BlockCard(props: Readonly<BlockCardProps>) {
     const [blockData, setBlockData] = useState<Block>()
     const [page, setPage] = useState(0)
-    const wsFetch = useContext(DataProvider)
+    const ref = useRef<HTMLDivElement>()
+    const cardGrid = useContext(CardGridContext)
+
+    const wsFetch = useContext(DataProviderContext)
     useEffect(() => {
+        attachMouseListener()
         wsFetch(
             getRequestPayload(InfuraApiMethod.GetBlockByNumber, [
                 props.blockNumber,
@@ -22,7 +30,7 @@ export function BlockCard(props: Readonly<BlockCardProps>) {
     const txCount = blockData?.transactions?.length
     const maxPage = txCount != null ? Math.floor(txCount / 100) : 0
     return (
-        <div className="block-card grid">
+        <div className="block-card grid" ref={ref}>
             <div className="header-bar">
                 <div>
                     <span>
@@ -34,13 +42,22 @@ export function BlockCard(props: Readonly<BlockCardProps>) {
                     </span>
                     <span>{txCount ?? ''} TXs</span>
                 </div>
-                <span>mined</span>
+                <span>
+                    mined{' '}
+                    {dayjs().to(
+                        dayjs(Number.parseInt(blockData?.timestamp) * 1000)
+                    )}
+                </span>
             </div>
             <div className="block-grid grid">
-                {blockData &&
-                    blockData.transactions
-                        .slice(page * 100, (page + 1) * 100)
-                        .map((tx) => <div className="tx-square"></div>)}
+                {blockData?.transactions
+                    .slice(page * 100, (page + 1) * 100)
+                    .map((tx) => (
+                        <div
+                            className="tx-square"
+                            key={tx.transactionIndex}
+                        ></div>
+                    ))}
             </div>
             <div className="paginator">
                 <PageIndicator
@@ -63,6 +80,17 @@ export function BlockCard(props: Readonly<BlockCardProps>) {
             </div>
         </div>
     )
+
+    function attachMouseListener() {
+        ref.current.addEventListener('mouseenter', () => {
+            ref.current.classList.add('has-hover')
+            cardGrid.classList.add('has-card-in-focus')
+        })
+        ref.current.addEventListener('mouseleave', () => {
+            ref.current.classList.remove('has-hover')
+            cardGrid.classList.remove('has-card-in-focus')
+        })
+    }
 }
 
 function PageIndicator(

@@ -36,7 +36,7 @@ body {
     margin: 0
 }
 
-div.block-visualisation {
+div.card-grid {
     --squareSize: var(--fontSizeMedium);
     --squareGridGap: 0.5rem;
     --cardPadding: 1.5rem;
@@ -48,6 +48,12 @@ div.block-visualisation {
     gap: 1rem;
     width: 100%;
 
+    &.has-card-in-focus {
+        .block-card:not(.has-hover) {
+            opacity: 0.25;
+        }
+    }
+
     .block-card {
         width: var(--cardWidth);
         grid-template-rows: max-content 1fr max-content;
@@ -55,6 +61,7 @@ div.block-visualisation {
         box-shadow: var(--shadow2);
         --gridBorder: 1px solid var(--borderColour);
         color: var(--baseWhite);
+        transition: all 0.3s;
 
         .header-bar {
             padding: var(--cardPadding);

@@ -8,7 +8,7 @@ import React, {
     useRef,
     useState,
 } from 'react'
-import { DataProvider } from './context'
+import { CardGridContext, DataProviderContext } from './context'
 import { KeyStats } from './KeyStats'
 import { Sidebar } from './Sidebar'
 import { BlockCard } from './components/BlockCard'
@@ -34,10 +34,12 @@ export default function Page() {
     const cbRegistry = useRef<WsCallbackRegistry>({})
 
     return (
-        <DataProvider.Provider value={getWsFetch(promise, cbRegistry.current)}>
+        <DataProviderContext.Provider
+            value={getWsFetch(promise, cbRegistry.current)}
+        >
             <Sidebar />
             <Dashboard />
-        </DataProvider.Provider>
+        </DataProviderContext.Provider>
     )
 
     function handleWsEvent(e: Event) {
@@ -59,16 +61,17 @@ function Dashboard() {
     return (
         <div>
             <KeyStats />
-            <BlockVisualisation />
+            <CardGrid />
         </div>
     )
 }
 
-function BlockVisualisation() {
+function CardGrid() {
     const PAGE_SIZE = 10
-    const wsFetch = useContext(DataProvider)
+    const wsFetch = useContext(DataProviderContext)
     const [firstBlockToDisplay, setFirstBlockToDisplay] = useState<string>()
     const [blocksDisplayed, setBlocksDisplayed] = useState(new Array(10))
+    const ref = useRef<HTMLDivElement>()
 
     useEffect(() => {
         if (firstBlockToDisplay) {
@@ -88,11 +91,16 @@ function BlockVisualisation() {
     }, [firstBlockToDisplay])
 
     return (
-        <div className="grid block-visualisation">
-            {blocksDisplayed.map((blockHexNumber) => (
-                <BlockCard key={blockHexNumber} blockNumber={blockHexNumber} />
-            ))}
-        </div>
+        <CardGridContext.Provider value={ref.current}>
+            <div className="grid card-grid" ref={ref}>
+                {blocksDisplayed.map((blockHexNumber) => (
+                    <BlockCard
+                        key={blockHexNumber}
+                        blockNumber={blockHexNumber}
+                    />
+                ))}
+            </div>
+        </CardGridContext.Provider>
     )
 }
 
