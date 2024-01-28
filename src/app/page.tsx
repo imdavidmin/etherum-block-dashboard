@@ -1,8 +1,8 @@
 'use client'
 import './page.scss'
 
-import React, { MutableRefObject, useRef, useState } from 'react'
-import { DataProviderContext } from './context'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { DataProviderContext, NetworkUpdatesContext } from './context'
 import { KeyStats } from './components/KeyStats'
 import { Sidebar } from './components/Sidebar'
 import {
@@ -14,51 +14,82 @@ import { PromiseWithResolvers, WsCallbackRegistry, getWsFetch } from './utils'
 import { CardGrid } from './components/CardGrid'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { getHandleWsEvent } from './utils/getHandleWsEvent'
+import {
+    getWsEventHandler,
+    messageEventHandlers,
+} from './utils/getHandleWsEvent'
 
 dayjs.extend(relativeTime)
+
+const ws = startWsConnection()
+const subscriptionWs = startWsConnection()
+const WS_EVENTS = ['open', 'close', 'error', 'message']
 
 export default function Page() {
     const cbRegistry = useRef<WsCallbackRegistry>({})
     const subscriptionRegistry = useRef<WsCallbackRegistry>([])
-    const [ws, setWs] = useState<WebSocket>(establishWsApiConnection())
     const [pendingTxs, setPendingTxs] = useState([])
+
+    useEffect(() => {
+        attachWsApiListeners()
+        attachPendingTransactionListeners()
+    }, [])
+
+    const networkUpdates = useMemo(
+        () => ({ state: pendingTxs, set: setPendingTxs }),
+        [pendingTxs]
+    )
 
     const { promise, resolve } = PromiseWithResolvers<typeof ws>()
     const wsFetch = getWsFetch(promise, cbRegistry.current)
-
-    const subscriptionPayload = getRequestPayload(InfuraApiMethod.Subscribe, [
-        'newPendingTransactions',
-    ])
-    subscriptionRegistry.current[subscriptionPayload.id] =
-        handleNewPendingTransaction
 
     return (
         <DataProviderContext.Provider value={wsFetch}>
             <Sidebar />
             <div>
                 <KeyStats />
-                <CardGrid />
+                <NetworkUpdatesContext.Provider value={networkUpdates}>
+                    <CardGrid />
+                </NetworkUpdatesContext.Provider>
             </div>
         </DataProviderContext.Provider>
     )
 
-    function establishWsApiConnection() {
-        return startWsConnection(
-            getHandleWsEvent(
-                (openWs) => {
-                    document.dispatchEvent(new Event('load'))
-                    openWs.send(JSON.stringify(subscriptionPayload))
-                    resolve(openWs)
-                },
-                subscriptionRegistry,
-                cbRegistry
-            )
+    function attachWsApiListeners() {
+        const handler = getWsEventHandler(
+            (openWs) => {
+                document.dispatchEvent(new Event('load'))
+                resolve(openWs)
+            },
+            messageEventHandlers.api,
+            cbRegistry
         )
+        WS_EVENTS.forEach((evtName) => ws.addEventListener(evtName, handler))
     }
-}
 
-function handleNewPendingTransaction(v) {
-    if (v.params.result) {
+    function attachPendingTransactionListeners() {
+        const handler = getWsEventHandler(
+            beginSubscription,
+            messageEventHandlers.subscription,
+            subscriptionRegistry
+        )
+
+        WS_EVENTS.forEach((evtName) =>
+            subscriptionWs.addEventListener(evtName, handler)
+        )
+
+        function beginSubscription(openWs: WebSocket) {
+            const subscriptionPayload = getRequestPayload(
+                InfuraApiMethod.Subscribe,
+                ['newPendingTransactions']
+            )
+            subscriptionRegistry.current[subscriptionPayload.id] =
+                handleNewPendingTransaction
+            openWs.send(JSON.stringify(subscriptionPayload))
+        }
+    }
+
+    function handleNewPendingTransaction(v) {
+        setPendingTxs((prev) => [...prev, v])
     }
 }

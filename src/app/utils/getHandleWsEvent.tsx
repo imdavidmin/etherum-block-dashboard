@@ -3,46 +3,53 @@
 import { MutableRefObject } from 'react'
 import { WsCallbackRegistry } from '.'
 
-export function getHandleWsEvent(
-    resolver: (ws: WebSocket) => void,
-    subscriptionRegistry: MutableRefObject<WsCallbackRegistry>,
-    cbRegistry: MutableRefObject<WsCallbackRegistry>
+export const messageEventHandlers = {
+    subscription: (
+        e: MessageEvent,
+        registry: MutableRefObject<WsCallbackRegistry>,
+        json
+    ) => {
+        if (json.method == 'eth_subscription') {
+            const subscriptionId = json.params.subscription
+            const handler = registry.current[subscriptionId]
+            handler(json)
+        } else if (json.result) {
+            console.debug('<WSS> Subscription succeeded.', json)
+
+            const subscriptionRequest = registry.current[json.id]
+            registry.current[json.result] = subscriptionRequest
+            delete registry.current[json.id]
+        }
+    },
+    api: (e: MessageEvent, registry: MutableRefObject<WsCallbackRegistry>) => {
+        const json = JSON.parse(e.data)
+        console.debug('<WSS> Received', json)
+
+        const resolver = registry.current[json.id]
+        resolver?.(json.result)
+        delete registry.current[json.id]
+    },
+}
+
+export function getWsEventHandler(
+    onWsOpen: (ws: WebSocket) => void,
+    onMessage: (
+        e: MessageEvent,
+        registry: MutableRefObject<WsCallbackRegistry>,
+        json
+    ) => void,
+    registry: MutableRefObject<WsCallbackRegistry>
 ) {
     return (e: Event) => {
         switch (e.type) {
             case 'open':
-                resolver(e.target as WebSocket)
                 console.log('<WSS> Connection open.', e)
+                onWsOpen(e.target as WebSocket)
                 break
-            case 'message': {
+            case 'message':
                 const msgEvt = e as MessageEvent
-                const json = JSON.parse(msgEvt.data)
-
-                if (json.method == 'eth_subscription') {
-                    const subscriptionId = json.params.subscription
-                    const handler = subscriptionRegistry.current[subscriptionId]
-                    handler(json)
-                } else {
-                    const subscriptionRequest =
-                        subscriptionRegistry.current[json.id]
-
-                    if (subscriptionRequest) {
-                        console.log('<WSS> Subscription succeeded.', json)
-                        subscriptionRegistry.current[json.result] =
-                            subscriptionRequest
-                    } else {
-                        console.log('<WSS> Received', json)
-                        const resolver = cbRegistry.current[json.id]
-                        if (!resolver) {
-                            console.log(json)
-                            return
-                        }
-                        resolver(json.result)
-                        delete cbRegistry.current[json.id]
-                    }
-                }
+                onMessage(msgEvt, registry, JSON.parse(msgEvt.data))
                 break
-            }
         }
     }
 }
