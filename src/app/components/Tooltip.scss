@@ -19,6 +19,7 @@ div.tooltip-container {
         gap: 1rem;
         transform: translateX(1rem);
         background: var(--baseWhite);
+        width: max-content;
 
         >div {
             display: flex;

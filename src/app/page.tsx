@@ -12,7 +12,9 @@ import { CardGrid } from './CardGrid'
 export default function Page() {
     const { promise, resolve } = PromiseWithResolvers<typeof ws.current>()
 
-    const ws = useRef(startWsConnection(handleWsEvent))
+    const ws = useRef<WebSocket>()
+    ws.current = startWsConnection(handleWsEvent)
+
     const cbRegistry = useRef<WsCallbackRegistry>({})
 
     return (
