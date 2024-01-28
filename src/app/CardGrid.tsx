@@ -1,8 +1,16 @@
 'use client'
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { CardGridContext, DataProviderContext } from './context'
+import {
+    CardGridContext,
+    DataProviderContext,
+    FiatPricingContext,
+} from './context'
 import { BlockCard } from './components/BlockCard'
-import { InfuraApiMethod, getRequestPayload } from './constants'
+import {
+    InfuraApiMethod,
+    PRICING_ENDPOINT,
+    getRequestPayload,
+} from './constants'
 import { hexToDec } from './utils'
 
 export function CardGrid() {
@@ -11,6 +19,22 @@ export function CardGrid() {
     const [firstBlockToDisplay, setFirstBlockToDisplay] = useState<string>()
     const [blocksDisplayed, setBlocksDisplayed] = useState(new Array(10))
     const ref = useRef<HTMLDivElement>()
+
+    const [ethUsd, setEthUsd] = useState<number>()
+
+    useEffect(() => {
+        getEthUsd().then((v) => setEthUsd(v))
+
+        async function getEthUsd() {
+            const response = await fetch(PRICING_ENDPOINT)
+            if (response.ok) {
+                const json = await response.json()
+                return json.ethereum.usd
+            } else {
+                throw new Error('Cannot get ETHUSD pricing data')
+            }
+        }
+    }, [])
 
     useEffect(() => {
         if (firstBlockToDisplay) {
@@ -31,14 +55,16 @@ export function CardGrid() {
 
     return (
         <CardGridContext.Provider value={ref.current}>
-            <div className="grid card-grid" ref={ref}>
-                {blocksDisplayed.map((blockHexNumber) => (
-                    <BlockCard
-                        key={blockHexNumber}
-                        blockNumber={blockHexNumber}
-                    />
-                ))}
-            </div>
+            <FiatPricingContext.Provider value={ethUsd}>
+                <div className="grid card-grid" ref={ref}>
+                    {blocksDisplayed.map((blockHexNumber) => (
+                        <BlockCard
+                            key={blockHexNumber}
+                            blockNumber={blockHexNumber}
+                        />
+                    ))}
+                </div>
+            </FiatPricingContext.Provider>
         </CardGridContext.Provider>
     )
 }
