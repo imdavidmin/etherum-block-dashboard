@@ -1,7 +1,7 @@
 'use client'
-import { ICONS } from './components/icons'
+import { ICONS } from './icons'
 import React from 'react'
-import { IconButton } from './page'
+import { IconButton } from './IconButton'
 
 export function Sidebar() {
     const USER_BUTTONS: Array<string> = ['dashboard', 'projects', 'explorer']

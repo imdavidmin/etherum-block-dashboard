@@ -1,4 +1,4 @@
-import { RequestPayload } from './constants'
+import { RequestPayload } from '../constants'
 
 export function hexToDec(hex: string) {
     try {
@@ -24,6 +24,7 @@ export function PromiseWithResolvers<T>() {
 
 export type WsCallbackRegistry = Record<number, (v) => void>
 
+/** Returns a function that resembles `fetch()` for sending a payload over a WebSocket connection */
 export const getWsFetch =
     (wsPromise: Promise<WebSocket>, cbRegistry: WsCallbackRegistry) =>
     (payload: RequestPayload) => {

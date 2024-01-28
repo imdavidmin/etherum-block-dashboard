@@ -10,8 +10,11 @@ export function TxSquare(props: { tx: Transaction }) {
         ref.current.addEventListener('mouseleave', () => setIsHover(false))
     }, [])
 
+    const classNames = ['tx-square']
+    Number.parseInt(props.tx.value, 16) > 0 && classNames.push('confirmed')
+
     return (
-        <div className="tx-square" ref={ref}>
+        <div className={classNames.join(' ')} ref={ref}>
             {isHover && (
                 <Tooltip
                     from={props.tx.from}

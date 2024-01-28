@@ -6,6 +6,7 @@ export const PRICING_ENDPOINT =
 export enum InfuraApiMethod {
     BlockNumber = 'eth_blockNumber',
     GetBlockByNumber = 'eth_getBlockByNumber',
+    Subscribe = 'eth_subscribe',
 }
 
 export type RequestPayload = ReturnType<typeof getRequestPayload>
@@ -15,55 +16,6 @@ export const getRequestPayload = (method: InfuraApiMethod, args?) => ({
     id: Math.floor(Math.random() * 10 ** 9),
     params: args ?? [],
 })
-
-export const InfuraApi = {
-    eth: {
-        blockNumber() {
-            return postToInfura(getRequestPayload(InfuraApiMethod.BlockNumber))
-        },
-        getBlockByNumber(blockNumberInHex: string, details?: boolean) {
-            return postToInfura(
-                getRequestPayload(InfuraApiMethod.GetBlockByNumber, [
-                    blockNumberInHex,
-                    details,
-                ])
-            )
-        },
-    },
-}
-
-type RequestResponse =
-    | { error: boolean; errorDetail: any }
-    | { response: Response; data: Record<string, any> }
-
-async function postToInfura(body: string): Promise<RequestResponse> {
-    try {
-        const response = await fetch(API_REST_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-            },
-            body,
-        })
-        if (
-            response.ok &&
-            response.headers.get('content-type') == 'application/json'
-        ) {
-            return {
-                response: response,
-                data: await response.json(),
-            }
-        } else {
-            throw new Error(
-                `Status: ${
-                    response.status
-                }; Response type: ${response.headers.get('content-type')}`
-            )
-        }
-    } catch (e) {
-        return { error: true, errorDetail: e }
-    }
-}
 
 export function startWsConnection(listener: (e: Event) => void) {
     const ws = new WebSocket(API_WS_ENDPOINT)
