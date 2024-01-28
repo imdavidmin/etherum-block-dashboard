@@ -4,6 +4,7 @@ import { InfuraApiMethod, getRequestPayload } from '../constants'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { Shimmer } from './Shimmer'
+import { Tooltip } from './Tooltip'
 
 dayjs.extend(relativeTime)
 
@@ -39,10 +40,7 @@ export function BlockCard(props: Readonly<BlockCardProps>) {
                 {blockData?.transactions
                     .slice(page * 100, (page + 1) * 100)
                     .map((tx) => (
-                        <div
-                            className="tx-square"
-                            key={tx.transactionIndex}
-                        ></div>
+                        <TxSquare key={tx.transactionIndex} tx={tx} />
                     ))}
             </div>
             <div className="paginator">
@@ -70,6 +68,29 @@ export function BlockCard(props: Readonly<BlockCardProps>) {
             cardGrid.classList.remove('has-card-in-focus')
         })
     }
+}
+
+function TxSquare(props: { tx: Transaction }) {
+    const [isHover, setIsHover] = useState(false)
+    const ref = useRef<HTMLDivElement>()
+
+    useEffect(() => {
+        ref.current.addEventListener('mouseenter', () => setIsHover(true))
+        ref.current.addEventListener('mouseleave', () => setIsHover(false))
+    }, [])
+
+    return (
+        <div className="tx-square" ref={ref}>
+            {isHover && (
+                <Tooltip
+                    from={props.tx.from}
+                    to={props.tx.to}
+                    value={Number.parseFloat(props.tx.value)}
+                    target={ref.current}
+                />
+            )}
+        </div>
+    )
 }
 
 function CardHeader(props: { data: Block }) {

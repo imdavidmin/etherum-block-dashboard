@@ -6,6 +6,7 @@
     --shadow2: 0px 5px 20px 0pxvar(--black10);
     --headerBackground: #0000001A;
     --buttonSelected: #584E9A;
+    --fontSizeSmaller: calc(12 / 14 * 1rem);
     --fontSizeBase: 14px;
     --fontSizeMedium: 1.143rem;
     --fontSizeLarge: 1.5rem;
@@ -17,6 +18,8 @@
     --white10: #FFFFFF1A;
     --black10: #0000001A --baseBlack: #000;
     --shimmerColour: color-mix(in srgb, var(--baseWhite) 10%, transparent);
+    --grey1: #666666;
+    --grey2: #7F7F7F;
     --transparency75: transparent 75%;
     --transparency50: transparent 50%;
     --transparency25: transparent 25%;
@@ -95,6 +98,7 @@ div.card-grid {
             padding: var(--cardPadding);
 
             .tx-square {
+                position: relative;
                 height: 100%;
                 width: 100%;
                 background: var(--txColourPending);

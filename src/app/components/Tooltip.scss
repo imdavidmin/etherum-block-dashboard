@@ -1,0 +1,50 @@
+div.tooltip-container {
+    position: absolute;
+    z-index: 1;
+    top: -1.4rem;
+    left: 1.4rem;
+
+    .tooltip-pointer {
+        background: var(--baseWhite);
+        top: 1rem;
+        height: 1.414rem;
+        width: 1.414rem;
+        position: absolute;
+        transform: rotate(45deg) translateX(0.4rem);
+    }
+
+    .content-container {
+        display: grid;
+        padding: 1rem;
+        gap: 1rem;
+        transform: translateX(1rem);
+        background: var(--baseWhite);
+
+        >div {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .tooltip-field {
+            display: grid;
+            gap: 0.2rem;
+
+            span:first-child {
+                text-transform: uppercase;
+                color: var(--grey1);
+                font-size: var(--fontSizeSmaller);
+            }
+
+            span:last-child {
+                color: var(--themeDarker);
+                font-size: var(--fontSizeMedium);
+            }
+        }
+
+        .fiat-value {
+            color: var(--grey2);
+            font-size: var(--fontSizeMedium);
+        }
+    }
+}
