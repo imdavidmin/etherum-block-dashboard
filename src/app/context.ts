@@ -6,6 +6,10 @@ export const DataProviderContext = createContext<
 >(async () => {})
 export const FiatPricingContext = createContext<number>(null)
 export const CardGridContext = createContext<HTMLDivElement>(null)
+export const NetworkUpdatesContext = createContext({
+    state: null,
+    set: (v) => {},
+})
 
 DataProviderContext.displayName = 'DataProviderContext'
 FiatPricingContext.displayName = 'FiatPricingContext'

@@ -55,6 +55,7 @@ export function Tooltip(props: Readonly<TooltipProps>) {
     )
 
     function truncateAddress(addr: string) {
+        if (!addr) return ''
         return (
             addr.slice(0, 6) + '....' + addr.slice(addr.length - 4, addr.length)
         )

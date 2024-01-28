@@ -15,7 +15,7 @@ export function TxSquare(props: { tx?: Transaction }) {
 
     return (
         <div className={classNames.join(' ')} ref={ref}>
-            {isHover && props.tx && (
+            {isHover && props.tx.hash && (
                 <Tooltip
                     from={props.tx.from}
                     to={props.tx.to}

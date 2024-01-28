@@ -17,9 +17,7 @@ export const getRequestPayload = (method: InfuraApiMethod, args?) => ({
     params: args ?? [],
 })
 
-export function startWsConnection(listener: (e: Event) => void) {
+export function startWsConnection() {
     const ws = new WebSocket(API_WS_ENDPOINT)
-    const wsEvents = ['open', 'close', 'error', 'message']
-    wsEvents.forEach((evtName) => ws.addEventListener(evtName, listener))
     return ws
 }

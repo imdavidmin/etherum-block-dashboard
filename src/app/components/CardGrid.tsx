@@ -12,11 +12,12 @@ import {
     getRequestPayload,
 } from '../constants'
 import { hexToDec } from '../utils'
+import { NewBlocksCard } from './NewBlocksCard'
 
 export function CardGrid() {
     const PAGE_SIZE = 10
     const wsFetch = useContext(DataProviderContext)
-    const [firstBlockToDisplay, setFirstBlockToDisplay] = useState<string>()
+    const [initialBlockNumber, setFirstBlockToDisplay] = useState<string>()
     const [blocksDisplayed, setBlocksDisplayed] = useState(new Array(10))
     const ref = useRef<HTMLDivElement>()
 
@@ -37,12 +38,12 @@ export function CardGrid() {
     }, [])
 
     useEffect(() => {
-        if (firstBlockToDisplay) {
+        if (initialBlockNumber) {
             const blockHexNumbers = []
 
             for (let i = 0; i < PAGE_SIZE; i++) {
                 blockHexNumbers.push(
-                    '0x' + (hexToDec(firstBlockToDisplay) - i).toString(16)
+                    '0x' + (hexToDec(initialBlockNumber) - i).toString(16)
                 )
             }
             setBlocksDisplayed(blockHexNumbers)
@@ -51,13 +52,16 @@ export function CardGrid() {
                 setFirstBlockToDisplay(v)
             )
         }
-    }, [firstBlockToDisplay])
+    }, [initialBlockNumber])
 
     return (
         <CardGridContext.Provider value={ref.current}>
             <FiatPricingContext.Provider value={ethUsd}>
                 <div className="grid card-grid" ref={ref}>
-                    <NewBlocksCard />
+                    <NewBlocksCard
+                        displayedLatest={blocksDisplayed[0]}
+                        loadNewBlocks={loadNewBlocks}
+                    />
                     {blocksDisplayed.map((blockHexNumber) => (
                         <BlockCard
                             key={blockHexNumber}
@@ -68,8 +72,11 @@ export function CardGrid() {
             </FiatPricingContext.Provider>
         </CardGridContext.Provider>
     )
-}
-
-function NewBlocksCard() {
-    return <div className="block-card"></div>
+    function loadNewBlocks(blocks: Array<string>) {
+        setBlocksDisplayed(
+            Array.from(new Set([...blocks, ...blocksDisplayed])).toSorted(
+                (a, b) => b - a
+            )
+        )
+    }
 }
