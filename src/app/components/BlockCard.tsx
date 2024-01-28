@@ -3,6 +3,7 @@ import { CardGridContext, DataProviderContext } from '../context'
 import { InfuraApiMethod, getRequestPayload } from '../constants'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { Shimmer } from './Shimmer'
 
 dayjs.extend(relativeTime)
 
@@ -29,26 +30,11 @@ export function BlockCard(props: Readonly<BlockCardProps>) {
 
     const txCount = blockData?.transactions?.length
     const maxPage = txCount != null ? Math.floor(txCount / 100) : 0
+
     return (
         <div className="block-card grid" ref={ref}>
-            <div className="header-bar">
-                <div>
-                    <span>
-                        #
-                        {Number.parseInt(
-                            props.blockNumber,
-                            16
-                        )?.toLocaleString()}
-                    </span>
-                    <span>{txCount ?? ''} TXs</span>
-                </div>
-                <span>
-                    mined{' '}
-                    {dayjs().to(
-                        dayjs(Number.parseInt(blockData?.timestamp) * 1000)
-                    )}
-                </span>
-            </div>
+            <CardHeader data={blockData} />
+
             <div className="block-grid grid">
                 {blockData?.transactions
                     .slice(page * 100, (page + 1) * 100)
@@ -65,18 +51,11 @@ export function BlockCard(props: Readonly<BlockCardProps>) {
                     maxPage={maxPage}
                     txCount={txCount}
                 />
-                <div>
-                    {page != 0 && (
-                        <button onClick={() => setPage(page - 1)}>
-                            &#9204;
-                        </button>
-                    )}
-                    {page < maxPage && (
-                        <button onClick={() => setPage(page + 1)}>
-                            &#9205;
-                        </button>
-                    )}
-                </div>
+                <PageNavigator
+                    page={page}
+                    maxPage={maxPage}
+                    setPage={setPage}
+                />
             </div>
         </div>
     )
@@ -91,6 +70,60 @@ export function BlockCard(props: Readonly<BlockCardProps>) {
             cardGrid.classList.remove('has-card-in-focus')
         })
     }
+}
+
+function CardHeader(props: { data: Block }) {
+    if (!props.data)
+        return (
+            <div className="header-bar">
+                <div>
+                    <Shimmer width="40%" />
+                    <Shimmer width="15%" />
+                </div>
+                <span>
+                    <Shimmer width="20%" />
+                </span>
+            </div>
+        )
+
+    const blockNumberInDecimal = Number.parseInt(
+        props.data.number,
+        16
+    )?.toLocaleString()
+
+    return (
+        <div className="header-bar">
+            <div>
+                <span>#{blockNumberInDecimal}</span>
+                <span>{props.data.transactions.length ?? ''} TXs</span>
+            </div>
+            <span>
+                {'mined '}
+                {dayjs().to(
+                    dayjs(Number.parseInt(props.data.timestamp) * 1000)
+                )}
+            </span>
+        </div>
+    )
+}
+function PageNavigator(
+    props: Readonly<{
+        page: number
+        maxPage: number
+        setPage: (v: number) => void
+    }>
+) {
+    const { page, maxPage, setPage } = props
+    return (
+        <div>
+            {page != 0 && (
+                <button onClick={() => setPage(page - 1)}>&#9204;</button>
+            )}
+            {page < maxPage && (
+                <button onClick={() => setPage(page + 1)}>&#9205;</button>
+            )}
+        </div>
+    )
 }
 
 function PageIndicator(

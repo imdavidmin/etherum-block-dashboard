@@ -2,8 +2,8 @@
     --themeDarker: #3A307C;
     --colourBackground: linear-gradient(89.73deg, #584E9A 0.23%, var(--themeDarker) 99.77%);
     --sidebarColour: #6C62AE;
-    --shadow1: 5px 0px 75px 0px #0000001A;
-    --shadow2: 0px 5px 20px 0px #0000001A;
+    --shadow1: 5px 0px 75px 0px var(--black10);
+    --shadow2: 0px 5px 20px 0pxvar(--black10);
     --headerBackground: #0000001A;
     --buttonSelected: #584E9A;
     --fontSizeBase: 14px;
@@ -11,8 +11,12 @@
     --fontSizeLarge: 1.5rem;
     --fontSizeExtraLarge: 3rem;
     --baseWhite: #fff;
+    --white75: #FFFFFFBF;
+    --white50: #ffffff80;
     --white25: #FFFFFF40;
-    --baseBlack: #000;
+    --white10: #FFFFFF1A;
+    --black10: #0000001A --baseBlack: #000;
+    --shimmerColour: color-mix(in srgb, var(--baseWhite) 10%, transparent);
     --transparency75: transparent 75%;
     --transparency50: transparent 50%;
     --transparency25: transparent 25%;
@@ -34,6 +38,11 @@ body {
     height: 100vh;
     grid-template-columns: max-content 1fr;
     margin: 0
+}
+
+div.shimmer {
+    background: var(--shimmerColour);
+    margin: 0.2rem 0
 }
 
 div.card-grid {
@@ -107,7 +116,7 @@ div.card-grid {
             padding-left: var(--cardPadding);
 
             >span {
-                color: color-mix(in srgb, var(--baseWhite) 75%, var(--transparency25));
+                color: var(--white75)
             }
 
             >div {
@@ -145,7 +154,7 @@ div.key-stats-container {
         gap: 1rem 3rem;
 
         span.title-label {
-            color: color-mix(in hsl, var(--baseWhite) 50%, var(--transparency50));
+            color: var(--white50);
             text-transform: uppercase;
         }
 
