@@ -8,6 +8,10 @@ import { Sidebar } from './Sidebar'
 import { startWsConnection } from './constants'
 import { PromiseWithResolvers, WsCallbackRegistry, getWsFetch } from './utils'
 import { CardGrid } from './CardGrid'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(relativeTime)
 
 export default function Page() {
     const { promise, resolve } = PromiseWithResolvers<typeof ws.current>()
