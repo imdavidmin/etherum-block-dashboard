@@ -86,7 +86,6 @@ function TxSquare(props: { tx: Transaction }) {
                     from={props.tx.from}
                     to={props.tx.to}
                     value={Number.parseInt(props.tx.value, 16) / 10 ** 18}
-                    target={ref.current}
                 />
             )}
         </div>

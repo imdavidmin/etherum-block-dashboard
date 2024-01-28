@@ -7,12 +7,10 @@ export type TooltipProps = {
     from: string
     to: string
     value: number
-    target: HTMLElement
 }
 
 export function Tooltip(props: Readonly<TooltipProps>) {
     const ethUsd = useContext(FiatPricingContext)
-    console.log(ethUsd)
 
     const getFormattedUSDString = (v: number) =>
         v.toLocaleString(undefined, {
@@ -61,13 +59,6 @@ export function Tooltip(props: Readonly<TooltipProps>) {
             addr.slice(0, 6) + '....' + addr.slice(addr.length - 4, addr.length)
         )
     }
-
-    // function getOffsetStyle(): CSSProperties {
-    //     const x = props.target.offsetLeft
-    //     const y = props.target.offsetTop
-
-    //     return { transform: `translate(${x}px, ${y}px)` }
-    // }
 }
 
 function TooltipField(props: Readonly<{ title: string; value: string }>) {
