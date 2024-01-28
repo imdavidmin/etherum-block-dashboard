@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Tooltip } from '../Tooltip'
 
-export function TxSquare(props: { tx: Transaction }) {
+export function TxSquare(props: { tx?: Transaction }) {
     const [isHover, setIsHover] = useState(false)
     const ref = useRef<HTMLDivElement>()
 
@@ -15,7 +15,7 @@ export function TxSquare(props: { tx: Transaction }) {
 
     return (
         <div className={classNames.join(' ')} ref={ref}>
-            {isHover && (
+            {isHover && props.tx && (
                 <Tooltip
                     from={props.tx.from}
                     to={props.tx.to}
