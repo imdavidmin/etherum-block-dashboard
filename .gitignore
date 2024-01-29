@@ -12,3 +12,7 @@
 
 .next
 .env
+
+cypress/downloads
+cypress/screenshots
+cypress/videos
