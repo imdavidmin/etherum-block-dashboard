@@ -1,71 +1,71 @@
 const PAGE_URL = 'http://localhost:3000'
 
-// describe('Page initial load', () => {
-//     beforeEach(() => {
-//         cy.visit(PAGE_URL)
-//     })
+describe('Page initial load', () => {
+    beforeEach(() => {
+        cy.visit(PAGE_URL)
+    })
 
-//     it('should load the page with the main div containers', () => {
-//         cy.title().should('equal', 'Infura Block Explorer')
-//         cy.get('div.sidebar').should('exist')
-//         cy.get('div.key-stats-container').should('exist')
-//         cy.get('div.card-grid').should('exist')
-//     })
+    it('should load the page with the main div containers', () => {
+        cy.title().should('equal', 'Infura Block Explorer')
+        cy.get('div.sidebar').should('exist')
+        cy.get('div.key-stats-container').should('exist')
+        cy.get('div.card-grid').should('exist')
+    })
 
-//     it('should have all sidebar buttons', () => {
-//         const buttonText = [
-//             'dashboard',
-//             'projects',
-//             'explorer',
-//             'settings',
-//             'logout',
-//         ]
-//         buttonText.forEach((text) =>
-//             cy.get('div.sidebar').should('contain', text, { matchCase: false })
-//         )
-//     })
-// })
+    it('should have all sidebar buttons', () => {
+        const buttonText = [
+            'dashboard',
+            'projects',
+            'explorer',
+            'settings',
+            'logout',
+        ]
+        buttonText.forEach((text) =>
+            cy.get('div.sidebar').should('contain', text, { matchCase: false })
+        )
+    })
+})
 
-// describe('Components on initial load', () => {
-//     beforeEach(() => {
-//         cy.visit(PAGE_URL)
-//     })
-//     describe('Block card grid', () => {
-//         it('should have 10 block cards and 1 new block card', () => {
-//             cy.get('div.block-card')
-//                 .should('have.length', 11)
-//                 .and('have.class', 'block-card')
-//             cy.get('div.block-card.new')
-//                 .should('have.length', 1)
-//                 .and('have.class', 'new')
-//         })
-//     })
-//     describe('Block card', () => {
-//         it('should have 3 shimmer divs in block card header', () => {
-//             cy.get('div.block-card:not(.new) div.header-bar').each(
-//                 (headerBar) => {
-//                     cy.wrap(headerBar)
-//                         .find('div.shimmer')
-//                         .should('have.length', 3)
-//                 }
-//             )
-//         })
-//         it('should have 25 tx blocks when no data is loaded', () => {
-//             cy.get('div.block-card:not(.new)').each((headerBar) => {
-//                 cy.wrap(headerBar)
-//                     .find('div.tx-square')
-//                     .should('have.length', 25)
-//             })
-//         })
-//     })
-//     describe('"Load More" button', () => {
-//         it('should exist', () => {
-//             cy.get('div.grid-footer button')
-//                 .should('have.length', 1)
-//                 .contains('load more', { matchCase: false })
-//         })
-//     })
-// })
+describe('Components on initial load', () => {
+    beforeEach(() => {
+        cy.visit(PAGE_URL)
+    })
+    describe('Block card grid', () => {
+        it('should have 10 block cards and 1 new block card', () => {
+            cy.get('div.block-card')
+                .should('have.length', 11)
+                .and('have.class', 'block-card')
+            cy.get('div.block-card.new')
+                .should('have.length', 1)
+                .and('have.class', 'new')
+        })
+    })
+    describe('Block card', () => {
+        it('should have 3 shimmer divs in block card header', () => {
+            cy.get('div.block-card:not(.new) div.header-bar').each(
+                (headerBar) => {
+                    cy.wrap(headerBar)
+                        .find('div.shimmer')
+                        .should('have.length', 3)
+                }
+            )
+        })
+        it('should have 25 tx blocks when no data is loaded', () => {
+            cy.get('div.block-card:not(.new)').each((headerBar) => {
+                cy.wrap(headerBar)
+                    .find('div.tx-square')
+                    .should('have.length', 25)
+            })
+        })
+    })
+    describe('"Load More" button', () => {
+        it('should exist', () => {
+            cy.get('div.grid-footer button')
+                .should('have.length', 1)
+                .contains('load more', { matchCase: false })
+        })
+    })
+})
 
 describe('Data loading, assumed 5 seconds wait', () => {
     const WAIT_TIME = 3000
