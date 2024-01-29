@@ -14,3 +14,4 @@ export const NetworkUpdatesContext = createContext({
 DataProviderContext.displayName = 'DataProviderContext'
 FiatPricingContext.displayName = 'FiatPricingContext'
 CardGridContext.displayName = 'CardGridContext'
+NetworkUpdatesContext.displayName = 'NetworkUpdatesContext'

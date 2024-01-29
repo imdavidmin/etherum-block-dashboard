@@ -19,41 +19,32 @@ import { NewBlocksCard } from './NewBlocksCard'
 export function CardGrid() {
     const PAGE_SIZE = 10
     const wsFetch = useContext(DataProviderContext)
-    const [initialBlockNumber, setFirstBlockToDisplay] = useState<string>()
+    const [initialBlockNumber, setInitialBlockNumber] = useState<string>()
     const [blocksDisplayed, setBlocksDisplayed] = useState(new Array(10))
+    const [addBlockWork, setAddBlockWork] = useState(false)
     const ref = useRef<HTMLDivElement>()
 
     const [ethUsd, setEthUsd] = useState<number>()
 
     useEffect(() => {
         getEthUsd().then((v) => setEthUsd(v))
-
-        async function getEthUsd() {
-            const response = await fetch(PRICING_ENDPOINT)
-            if (response.ok) {
-                const json = await response.json()
-                return json.ethereum.usd
-            } else {
-                throw new Error('Cannot get ETHUSD pricing data')
-            }
-        }
     }, [])
 
     useEffect(() => {
-        if (initialBlockNumber) {
-            const blockHexNumbers = []
+        if (!addBlockWork) return
 
-            for (let i = 0; i < PAGE_SIZE; i++) {
-                blockHexNumbers.push(
-                    '0x' + (hexToDec(initialBlockNumber) - i).toString(16)
-                )
-            }
-            setBlocksDisplayed(blockHexNumbers)
-        } else {
-            wsFetch(getRequestPayload(InfuraApiMethod.BlockNumber)).then((v) =>
-                setFirstBlockToDisplay(v)
-            )
+        const lastBlockHex = blocksDisplayed[blocksDisplayed.length - 1]
+        const lastBlockDec = Number.parseInt(lastBlockHex, 16)
+        const newBlocksDisplayed = [...blocksDisplayed]
+        for (let i = 1; i <= PAGE_SIZE; i++) {
+            newBlocksDisplayed.push('0x' + (lastBlockDec - i).toString(16))
         }
+        setBlocksDisplayed(newBlocksDisplayed)
+        setAddBlockWork(false)
+    }, [addBlockWork])
+
+    useEffect(() => {
+        initialBlockNumber ? populateFirst10Blocks() : getLatestBlockNumber()
     }, [initialBlockNumber])
 
     return (
@@ -72,7 +63,9 @@ export function CardGrid() {
                     ))}
                 </div>
                 <div className="grid-footer">
-                    <button>Load more</button>
+                    <button onClick={() => setAddBlockWork(true)}>
+                        Load more
+                    </button>
                 </div>
             </FiatPricingContext.Provider>
         </CardGridContext.Provider>
@@ -83,5 +76,32 @@ export function CardGrid() {
                 (a, b) => b - a
             )
         )
+    }
+
+    function populateFirst10Blocks() {
+        const blockHexNumbers = []
+        for (let i = 0; i < PAGE_SIZE; i++) {
+            blockHexNumbers.push(
+                '0x' + (hexToDec(initialBlockNumber) - i).toString(16)
+            )
+        }
+
+        setBlocksDisplayed(blockHexNumbers)
+    }
+    async function getLatestBlockNumber() {
+        const json = await wsFetch(
+            getRequestPayload(InfuraApiMethod.BlockNumber)
+        )
+        setInitialBlockNumber(json.result)
+    }
+}
+
+async function getEthUsd() {
+    const response = await fetch(PRICING_ENDPOINT)
+    if (response.ok) {
+        const json = await response.json()
+        return json.ethereum.usd
+    } else {
+        throw new Error('Cannot get ETHUSD pricing data')
     }
 }

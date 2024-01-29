@@ -4,11 +4,7 @@ import { MutableRefObject } from 'react'
 import { WsCallbackRegistry } from '.'
 
 export const messageEventHandlers = {
-    subscription: (
-        e: MessageEvent,
-        registry: MutableRefObject<WsCallbackRegistry>,
-        json
-    ) => {
+    subscription: (registry: MutableRefObject<WsCallbackRegistry>, json) => {
         if (json.method == 'eth_subscription') {
             const subscriptionId = json.params.subscription
             const handler = registry.current[subscriptionId]
@@ -21,23 +17,18 @@ export const messageEventHandlers = {
             delete registry.current[json.id]
         }
     },
-    api: (e: MessageEvent, registry: MutableRefObject<WsCallbackRegistry>) => {
-        const json = JSON.parse(e.data)
+    api: (registry: MutableRefObject<WsCallbackRegistry>, json) => {
         console.debug('<WSS> Received', json)
 
         const resolver = registry.current[json.id]
-        resolver?.(json.result)
+        resolver(json)
         delete registry.current[json.id]
     },
 }
 
 export function getWsEventHandler(
     onWsOpen: (ws: WebSocket) => void,
-    onMessage: (
-        e: MessageEvent,
-        registry: MutableRefObject<WsCallbackRegistry>,
-        json
-    ) => void,
+    onMessage: (registry: MutableRefObject<WsCallbackRegistry>, json) => void,
     registry: MutableRefObject<WsCallbackRegistry>
 ) {
     return (e: Event) => {
@@ -48,7 +39,7 @@ export function getWsEventHandler(
                 break
             case 'message':
                 const msgEvt = e as MessageEvent
-                onMessage(msgEvt, registry, JSON.parse(msgEvt.data))
+                onMessage(registry, JSON.parse(msgEvt.data))
                 break
         }
     }

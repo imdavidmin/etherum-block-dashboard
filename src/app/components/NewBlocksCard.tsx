@@ -5,15 +5,17 @@ import React, { useContext, useEffect, useState } from 'react'
 import { DataProviderContext, NetworkUpdatesContext } from '../context'
 import { InfuraApiMethod, getRequestPayload } from '../constants'
 
-export function NewBlocksCard(props: {
-    displayedLatest: string
-    loadNewBlocks: (blocks: Array<string>) => void
-}) {
+export function NewBlocksCard(
+    props: Readonly<{
+        displayedLatest: string
+        loadNewBlocks: (blocks: Array<string>) => void
+    }>
+) {
     const [latestBlockNumber, setLatestBlockNumber] = useState(
         props.displayedLatest
     )
     const wsFetch = useContext(DataProviderContext)
-    const context = useContext(NetworkUpdatesContext)
+    const newTransactions = useContext(NetworkUpdatesContext)
 
     const latestDec = Number.parseInt(latestBlockNumber, 16)
     const lastDisplayedDec = Number.parseInt(props.displayedLatest, 16)
@@ -24,7 +26,7 @@ export function NewBlocksCard(props: {
             const response = await wsFetch(
                 getRequestPayload(InfuraApiMethod.BlockNumber)
             )
-            setLatestBlockNumber(response)
+            setLatestBlockNumber(response.result)
         }, 12000)
     }, [])
 
@@ -32,7 +34,7 @@ export function NewBlocksCard(props: {
         <div className="block-card new">
             <div className="grid">
                 <span>New pending transactions</span>
-                <span>{context.state.length}</span>
+                <span>{newTransactions.state.length}</span>
                 <span>New blocks</span>
                 <span>{Number.isNaN(newBlocksCount) ? 0 : newBlocksCount}</span>
                 {newBlocksCount > 0 && (

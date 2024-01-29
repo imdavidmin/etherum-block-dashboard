@@ -23,7 +23,7 @@ export function BlockCard(props: Readonly<BlockCardProps>) {
                 props.blockNumber,
                 true,
             ])
-        ).then((result) => setBlockData(result))
+        ).then((json) => setBlockData(json.result))
     }, [])
 
     const txCount = blockData?.transactions?.length

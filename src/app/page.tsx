@@ -10,7 +10,8 @@ import {
     getRequestPayload,
     startWsConnection,
 } from './constants'
-import { PromiseWithResolvers, WsCallbackRegistry, getWsFetch } from './utils'
+import { PromiseWithResolvers, WsCallbackRegistry } from './utils'
+import { getWsFetch } from './utils/getWsFetch'
 import { CardGrid } from './components/CardGrid'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -30,6 +31,9 @@ export default function Page() {
     const subscriptionRegistry = useRef<WsCallbackRegistry>([])
     const [pendingTxs, setPendingTxs] = useState([])
 
+    const { promise, resolve } = PromiseWithResolvers<typeof ws>()
+    const wsFetch = useRef(getWsFetch(promise, cbRegistry.current))
+
     useEffect(() => {
         attachWsApiListeners()
         attachPendingTransactionListeners()
@@ -40,11 +44,8 @@ export default function Page() {
         [pendingTxs]
     )
 
-    const { promise, resolve } = PromiseWithResolvers<typeof ws>()
-    const wsFetch = getWsFetch(promise, cbRegistry.current)
-
     return (
-        <DataProviderContext.Provider value={wsFetch}>
+        <DataProviderContext.Provider value={wsFetch.current}>
             <Sidebar />
             <div>
                 <KeyStats />

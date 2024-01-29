@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 
 export function KeyStats() {
     const [data, setData] = useState({
@@ -34,13 +34,13 @@ export function KeyStats() {
     const stats = Object.entries(data).map(([key, value]) => {
         const formatter = STAT_CONFIG[key]?.formatter ?? ((v) => v)
         return (
-            <>
+            <Fragment key={key}>
                 <span className="title-label">{STAT_CONFIG[key]?.label}</span>
                 <div>
                     <span className="stat-value">{formatter(value)}</span>
                     <span className="stat-unit">{STAT_CONFIG[key]?.unit}</span>
                 </div>
-            </>
+            </Fragment>
         )
     })
     return (
