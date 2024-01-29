@@ -1,0 +1,120 @@
+div.grid-footer {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+
+    button {
+        cursor: pointer;
+        background: var(--white25);
+        border: 1px solid var(--white10);
+        text-transform: uppercase;
+        font-size: var(--fontSizeMedium);
+        color: var(--baseWhite);
+        padding: 1rem 3rem;
+        border-radius: 10rem;
+        transition: all 0.3s;
+    }
+
+    button:hover {
+        transform: translateY(-3px)
+    }
+}
+
+div.card-grid {
+    --squareSize: var(--fontSizeMedium);
+    --squareGridGap: 0.5rem;
+    --cardPadding: 1.5rem;
+    --cardWidth: calc(var(--squareSize) * 10 + var(--squareGridGap) * 9 + var(--cardPadding) * 2);
+
+    padding: 3rem;
+    box-sizing: border-box;
+    grid-template-columns: repeat(auto-fit, var(--cardWidth));
+    gap: 1rem;
+    width: 100%;
+
+    &.has-card-in-focus {
+        .block-card:not(.has-hover) {
+            opacity: 0.25;
+        }
+    }
+
+
+    .block-card {
+        width: var(--cardWidth);
+        grid-template-rows: max-content 1fr max-content;
+        background: var(--blockCardBackground);
+        box-shadow: var(--shadow2);
+        --gridBorder: 1px solid var(--borderColour);
+        color: var(--baseWhite);
+        transition: all 0.3s;
+
+        .header-bar {
+            padding: var(--cardPadding);
+            border-bottom: var(--gridBorder);
+
+            >div {
+                display: flex;
+                justify-content: space-between;
+                font-size: var(--fontSizeMedium);
+            }
+
+            >span {
+                color: var(--txColourConfirmed);
+            }
+        }
+
+        .block-grid {
+            grid-template-columns: repeat(10, var(--squareSize));
+            grid-template-rows: repeat(10, var(--squareSize));
+            gap: var(--squareGridGap);
+            width: max-content;
+            padding: var(--cardPadding);
+
+            .tx-square {
+                position: relative;
+                height: 100%;
+                width: 100%;
+                background: var(--txColourPending);
+
+                &.confirmed {
+                    background: var(--txColourConfirmed);
+
+                }
+            }
+
+        }
+
+        .paginator {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-transform: uppercase;
+            border-top: var(--gridBorder);
+            padding-left: var(--cardPadding);
+
+            >span {
+                color: var(--white75)
+            }
+
+            >div {
+                display: flex;
+                gap: 1;
+            }
+
+            button {
+                height: calc(2* var(--fontSizeMedium));
+                width: calc(2* var(--fontSizeMedium));
+                background: var(--white25);
+                color: color-mix(in srgb, var(--themeDarker) 50%, var(--transparency50));
+                border: 0;
+                font-size: var(--fontSizeMedium);
+            }
+
+            &.hidden {
+                display: none
+            }
+        }
+    }
+
+
+}

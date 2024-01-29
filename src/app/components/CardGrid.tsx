@@ -1,4 +1,6 @@
 'use client'
+import './CardGrid.scss'
+
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import {
     CardGridContext,
@@ -68,6 +70,9 @@ export function CardGrid() {
                             blockNumber={blockHexNumber}
                         />
                     ))}
+                </div>
+                <div className="grid-footer">
+                    <button>Load more</button>
                 </div>
             </FiatPricingContext.Provider>
         </CardGridContext.Provider>
