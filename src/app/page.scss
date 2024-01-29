@@ -1,10 +1,19 @@
-:root {
+body {
+    margin: 0
+}
+
+button {
+    cursor: pointer;
+}
+
+.app-container {
     --themeDarker: #3A307C;
-    --colourBackground: linear-gradient(89.73deg, #584E9A 0.23%, var(--themeDarker) 99.77%);
+    --themeLighter: #584E9A;
+    --colourBackground: linear-gradient(89.73deg, var(--themeLighter) 0.23%, var(--themeDarker) 99.77%);
     --sidebarColour: #6C62AE;
     --shadow1: 5px 0px 75px 0px var(--black10);
     --shadow2: 0px 5px 20px 0pxvar(--black10);
-    --headerBackground: #0000001A;
+    --headerBackground: var(--black10);
     --buttonSelected: #584E9A;
     --fontSizeSmaller: calc(12 / 14 * 1rem);
     --fontSizeBase: 14px;
@@ -16,7 +25,8 @@
     --white50: #ffffff80;
     --white25: #FFFFFF40;
     --white10: #FFFFFF1A;
-    --black10: #0000001A --baseBlack: #000;
+    --baseBlack: #000;
+    --black10: #0000001A;
     --shimmerColour: color-mix(in srgb, var(--baseWhite) 10%, transparent);
     --grey1: #666666;
     --grey2: #7F7F7F;
@@ -29,99 +39,48 @@
     --txColourPending: var(--white25);
     --blockCardBackground: var(--white25);
     --borderColour: #FFFFFF1A;
+
+    &.high-contrast {
+        --white75: #FFF;
+        --white50: #FFF;
+        --white25: #FFF;
+        --white10: #FFF;
+        --grey1: #333;
+        --grey2: #333;
+        --buttonSelected: #333;
+        --sidebarColour: #000;
+        --themeDarker: #000;
+        --themeLighter: #333;
+        --blockCardBackground: #000;
+
+        .block-card.new>div button {
+            background: var(--baseWhite);
+            color: var(--baseBlack)
+        }
+
+        .grid-footer button {
+            color: var(--baseBlack)
+        }
+    }
 }
 
-body,
+.app-container,
 .grid {
     display: grid
 }
 
-body {
+.app-container {
     background: var(--colourBackground);
     height: 100vh;
     grid-template-columns: max-content 1fr;
-    margin: 0
+
+    .app-content-container {
+        height: 100vh;
+        grid-template-rows: max-content 1fr;
+    }
 }
 
 div.shimmer {
     background: var(--shimmerColour);
     margin: 0.2rem 0
-}
-
-
-
-div.key-stats-container {
-    background: var(--headerBackground);
-
-    &>div {
-        width: max-content;
-        padding: 2rem;
-        grid-auto-flow: column;
-        grid-template-rows: repeat(2, max-content);
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem 3rem;
-
-        span.title-label {
-            color: var(--white50);
-            text-transform: uppercase;
-        }
-
-        span:not(.title-label) {
-            color: var(--baseWhite)
-        }
-
-        span.stat-unit {
-            font-size: var(--fontSizeLarge);
-        }
-
-        span.stat-value {
-            font-size: var(--fontSizeExtraLarge);
-        }
-    }
-}
-
-div.sidebar {
-    background: var(--sidebarColour);
-    box-shadow: var(--shadow1);
-
-    padding: 0 0.5rem;
-    justify-content: center;
-    grid-template-rows: max-content 1fr max-content;
-    height: 100%;
-
-    button.home-button,
-    button.icon-button {
-        background: transparent;
-        color: var(--baseWhite);
-        max-width: 10vw;
-        min-width: 100px;
-        max-height: 10vw;
-        min-height: 100px;
-        border: 0;
-
-        &.is-selected {
-            background: var(--buttonSelected)
-        }
-    }
-
-    button.home-button {
-        font-size: 3rem;
-    }
-
-    button.icon-button {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-
-        span {
-            text-transform: uppercase;
-        }
-
-        svg {
-            width: 1.75rem;
-            height: 1.75rem
-        }
-    }
 }

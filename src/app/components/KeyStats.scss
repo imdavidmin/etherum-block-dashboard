@@ -1,0 +1,29 @@
+div.key-stats-container {
+    background: var(--headerBackground);
+
+    &>div {
+        width: max-content;
+        padding: 2rem;
+        grid-auto-flow: column;
+        grid-template-rows: repeat(2, max-content);
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem 3rem;
+
+        span.title-label {
+            color: var(--white50);
+            text-transform: uppercase;
+        }
+
+        span:not(.title-label) {
+            color: var(--baseWhite)
+        }
+
+        span.stat-unit {
+            font-size: var(--fontSizeLarge);
+        }
+
+        span.stat-value {
+            font-size: var(--fontSizeExtraLarge);
+        }
+    }
+}

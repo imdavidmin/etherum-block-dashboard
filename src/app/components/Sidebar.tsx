@@ -1,4 +1,6 @@
 'use client'
+
+import './Sidebar.scss'
 import { ICONS } from './icons'
 import React from 'react'
 import { IconButton } from './IconButton'
@@ -8,7 +10,9 @@ export function Sidebar() {
     const APP_BUTTONS: Array<string> = ['settings', 'logout']
     return (
         <div className="sidebar grid">
-            <button className="home-button">{ICONS.infura}</button>
+            <button className="home-button" onClick={toggleHighContrast}>
+                {ICONS.infura}
+            </button>
             <div>{getButtons(USER_BUTTONS)}</div>
             <div>{getButtons(APP_BUTTONS)}</div>
         </div>
@@ -22,5 +26,10 @@ export function Sidebar() {
                 label={buttonLabel}
             />
         ))
+    }
+
+    function toggleHighContrast() {
+        const el = document.querySelector('div.app-container')
+        el.classList.toggle('high-contrast')
     }
 }

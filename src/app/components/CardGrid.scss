@@ -27,10 +27,11 @@ div.card-grid {
     --cardWidth: calc(var(--squareSize) * 10 + var(--squareGridGap) * 9 + var(--cardPadding) * 2);
 
     padding: 3rem;
-    box-sizing: border-box;
     grid-template-columns: repeat(auto-fit, var(--cardWidth));
     gap: 1rem;
     width: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
 
     &.has-card-in-focus {
         .block-card:not(.has-hover) {

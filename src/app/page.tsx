@@ -46,12 +46,14 @@ export default function Page() {
 
     return (
         <DataProviderContext.Provider value={wsFetch.current}>
-            <Sidebar />
-            <div>
-                <KeyStats />
-                <NetworkUpdatesContext.Provider value={networkUpdates}>
-                    <CardGrid />
-                </NetworkUpdatesContext.Provider>
+            <div className="app-container">
+                <Sidebar />
+                <div className="grid app-content-container">
+                    <KeyStats />
+                    <NetworkUpdatesContext.Provider value={networkUpdates}>
+                        <CardGrid />
+                    </NetworkUpdatesContext.Provider>
+                </div>
             </div>
         </DataProviderContext.Provider>
     )

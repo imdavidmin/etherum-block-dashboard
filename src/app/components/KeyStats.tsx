@@ -1,4 +1,6 @@
 'use client'
+
+import './KeyStats.scss'
 import React, { Fragment, useState } from 'react'
 
 export function KeyStats() {
